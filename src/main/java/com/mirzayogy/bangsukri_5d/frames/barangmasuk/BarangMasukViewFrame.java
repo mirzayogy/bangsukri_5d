@@ -4,6 +4,16 @@
  */
 package com.mirzayogy.bangsukri_5d.frames.barangmasuk;
 
+import com.mirzayogy.bangsukri_5d.db.Basisdata;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 /**
  *
  * @author mirza
@@ -37,10 +47,12 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
         hapusButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         tutupButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Data Ruang");
+        jLabel1.setText("Data Barang Masuk");
 
         jLabel2.setText("Cari Ruang");
 
@@ -62,14 +74,14 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id", "Ruang"
+                "Id", "Tanggal", "Sumber Dana", "Pemasok", "Karyawan"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -81,6 +93,10 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(viewTable);
+        if (viewTable.getColumnModel().getColumnCount() > 0) {
+            viewTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+            viewTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
 
         tambahButton.setText("Tambah");
         tambahButton.addActionListener(new java.awt.event.ActionListener() {
@@ -117,6 +133,10 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Filter Tahun");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,16 +144,7 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cariTextField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cariButton))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tambahButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,7 +154,23 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(resetButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tutupButton)))
+                        .addComponent(tutupButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cariTextField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cariButton)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -157,7 +184,11 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
                     .addComponent(cariTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cariButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tutupButton)
@@ -199,25 +230,25 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cariButtonActionPerformed
 
     private void tambahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahButtonActionPerformed
-        RuangAddFrame f = new RuangAddFrame();
-        f.setVisible(true);
+//        RuangAddFrame f = new RuangAddFrame();
+//        f.setVisible(true);
     }//GEN-LAST:event_tambahButtonActionPerformed
 
     private void ubahButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahButtonActionPerformed
 
-        TableModel tableModel = viewTable.getModel();
-        int barisTerpilih = viewTable.getSelectedRow();
-
-        if (barisTerpilih >= 0) {
-            int id = (int) tableModel.getValueAt(barisTerpilih, 0);
-            RuangAddFrame f = new RuangAddFrame(id);
-            f.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null,
-                "Pilih data",
-                "Pesan",
-                JOptionPane.WARNING_MESSAGE);
-        }
+//        TableModel tableModel = viewTable.getModel();
+//        int barisTerpilih = viewTable.getSelectedRow();
+//
+//        if (barisTerpilih >= 0) {
+//            int id = (int) tableModel.getValueAt(barisTerpilih, 0);
+//            RuangAddFrame f = new RuangAddFrame(id);
+//            f.setVisible(true);
+//        } else {
+//            JOptionPane.showMessageDialog(null,
+//                "Pilih data",
+//                "Pesan",
+//                JOptionPane.WARNING_MESSAGE);
+//        }
     }//GEN-LAST:event_ubahButtonActionPerformed
 
     private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
@@ -247,7 +278,7 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_hapusButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        formWindowActivated(null);
+//        formWindowActivated(null);
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void tutupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tutupButtonActionPerformed
@@ -293,8 +324,10 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
     private javax.swing.JButton cariButton;
     private javax.swing.JTextField cariTextField;
     private javax.swing.JButton hapusButton;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton tambahButton;
