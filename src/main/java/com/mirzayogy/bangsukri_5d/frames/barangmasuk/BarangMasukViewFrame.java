@@ -278,7 +278,30 @@ public class BarangMasukViewFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_hapusButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-//        formWindowActivated(null);
+       try {
+            Connection koneksi = Basisdata.getConnection();
+            String selectSQL = "SELECT BM.*, P.nama_pemasok, K.nama_karyawan FROM barang_masuk BM " +
+                "INNER JOIN pemasok P ON BM.pemasok_id = P.id " +
+                "INNER JOIN karyawan K ON BM.karyawan_id = K.id";
+            Statement statement = koneksi.createStatement();
+            ResultSet resultSet = statement.executeQuery(selectSQL);
+
+            Object[] row = new Object[5];
+            DefaultTableModel model = (DefaultTableModel) viewTable.getModel();
+            model.setRowCount(0);
+
+            while(resultSet.next()){
+                row[0] = resultSet.getInt("id");
+                row[1] = resultSet.getString("tanggal");
+                row[2] = resultSet.getString("sumber_dana");
+                row[3] = resultSet.getString("nama_pemasok");
+                row[4] = resultSet.getString("nama_karyawan");
+                model.addRow(row);
+            }
+            koneksi.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        } 
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void tutupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tutupButtonActionPerformed
