@@ -189,6 +189,24 @@ public class BarangMasukAddFrame extends javax.swing.JFrame {
         System.out.println(sumberDana);
         System.out.println(pemasokId);
         System.out.println(karyawanId);
+        
+        String insertSql = "INSERT INTO barang_masuk SET " + 
+                " tanggal='" + tanggal +"',"+
+                " sumber_dana='" + sumberDana +"',"+
+                " pemasok_id=" + pemasokId +","+
+                " karyawan_id=" + karyawanId;
+        
+        try {
+            Connection koneksi = Basisdata.getConnection();
+            
+            Statement statement = koneksi.createStatement();
+            statement.executeUpdate(insertSql);
+            koneksi.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        } 
+        
+              
     }//GEN-LAST:event_simpanButtonActionPerformed
 
     /**
